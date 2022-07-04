@@ -1,13 +1,26 @@
 from app import mysql, session 
 
 class Table():
+    #specify the table name and columns
+    #EXAMPLE table:
+    #               blockchain
+    # number    hash    previous   data    nonce
+    # -data-   -data-    -data-   -data-  -data-
+    #
+    #EXAMPLE initialization: ...Table("blockchain", "number", "hash", "previous", "data", "nonce")
     def __init__(self, table_name, *args):
         self.table = table_name
         self.columns = "(%s)" %",".join(args)
+        self.columnsList = args
 
-        if isNewTable(table_name):
-            cur = mysql.connection.cursor()
-            cur.execute("CREATE TABLE %s%s" %(self.table, self.columns))
+        #if table does not already exist, create it.
+        if isnewtable(table_name):
+            create_data = ""
+            for column in self.columnsList:
+                create_data += "%s varchar(100)," %column
+
+            cur = mysql.connection.cursor() #create the table
+            cur.execute("CREATE TABLE %s(%s)" %(self.table, create_data[:len(create_data)-1]))
             cur.close()
 
     #get all the values from the table
