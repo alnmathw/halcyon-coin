@@ -1,15 +1,17 @@
+# to use sha256 hash for the blockchain
 from hashlib import sha256
 
+# Takes in any number of arguments and produces a sha256 hash as a result
 
 def updatehash(*args):
     hashing_text = ""
     h = sha256()
+    # loop through each argument and hash
     for arg in args:
         hashing_text += str(arg)
 
     h.update(hashing_text.encode('utf-8'))
     return h.hexdigest()
-
 
 # The "node" of the blockchain. Points to the previous block by its unique hash in previous_hash.
 class Block():
@@ -91,20 +93,24 @@ class Blockchain():
         return True
 
 
+# for testing purposes
 def main():
     blockchain = Blockchain()
-    database = ["hello", "test", "adad", "apdjaoi"]
+    database = ["hello", "goodbye", "test", "DATA here"]
 
     num = 0
     for data in database:
         num += 1
-        blockchain.mine(Block(data, num))
+        blockchain.mine(Block(num, data=data))
 
     for block in blockchain.chain:
         print(block)
 
     print(blockchain.isValid())
 
+    blockchain.chain[2].data = "NEW DATA"
+    blockchain.mine(blockchain.chain[2])
+    print(blockchain.isValid())
 
 if __name__ == '__main__':
     main()

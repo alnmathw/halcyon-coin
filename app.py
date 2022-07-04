@@ -1,18 +1,27 @@
+# import flask dependencies for web GUI
 from flask import Flask, render_template, flash, redirect, url_for, session, request, logging
 from passlib.hash import sha256_crypt
 from flask_mysqldb import MySQL
 from functools import wraps
 
+# import other functions and classes
 from sqlhelpers import *
 from forms import *
 
+# other dependencies
+import time
+
+# initialize the app
 app = Flask(__name__)
+
+# configure mysql
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = ''
+app.config['MYSQL_PASSWORD'] = 'gerome'
 app.config['MYSQL_DB'] = 'crypto'
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 
+# initialize mysql
 mysql = MySQL(app)
 
 # wrap to define if the user is currently logged in from session
@@ -40,6 +49,8 @@ def log_in_user(username):
     session['name'] = user.get('name')
     session['email'] = user.get('email')
 
+# Registration page
+
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
@@ -52,6 +63,7 @@ def register():
         username = form.username.data
         email = form.email.data
         name = form.name.data
+
         # make sure user does not already exist
         if isnewuser(username):
             # add the user to mysql and log them in
@@ -142,6 +154,7 @@ def buy():
         return redirect(url_for('dashboard'))
 
     return render_template('buy.html', balance=balance, form=form, page='buy')
+
 # logout the user. Ends current session
 
 
@@ -158,10 +171,16 @@ def logout():
 @app.route("/dashboard")
 @is_logged_in
 def dashboard():
-    return render_template('dashboard.html')
+    balance = get_balance(session.get('username'))
+    blockchain = get_blockchain().chain
+    ct = time.strftime("%I:%M %p")
+    return render_template('dashboard.html', balance=balance, session=session, ct=ct, blockchain=blockchain, page='dashboard')
+
+# Index page
 
 
 @app.route("/")
+@app.route("/index")
 def index():
     return render_template('index.html')
 
