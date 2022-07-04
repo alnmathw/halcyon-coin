@@ -11,7 +11,13 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Halcyon - Register</title>
+    <title>Shockwave - Register</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename = 'images/favicon.ico') }}">
+
+    <link href="{{url_for('static',filename='vendor/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
+    <link href="{{url_for('static',filename='vendor/fontawesome-free/css/all.min.css')}}" rel="stylesheet" type="text/css">
+    <link href="{{url_for('static',filename='css/sb-admin.css')}}" rel="stylesheet">
+
   </head>
 
   <body class="bg-dark">
@@ -20,6 +26,9 @@
       <div class="card card-register mx-auto mt-5">
         <div class="card-header">Register an Account</div>
         <div class="card-body">
+
+          {% include 'includes/_messages.html' %}
+          {% from "includes/_formhelpers.html" import render_field %}
           <form method="POST" action="">
             <div class="form-group">
               <div class="form-row">
@@ -71,5 +80,12 @@
         </div>
       </div>
     </div>
+
+
+    <script src="{{url_for('static',filename='vendor/jquery/jquery.min.js')}}"></script>
+    <script src="{{url_for('static',filename='vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+    <script src="{{url_for('static',filename='vendor/jquery-easing/jquery.easing.min.js')}}"></script>
+
   </body>
+
 </html>
