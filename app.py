@@ -39,6 +39,12 @@ def register():
 
     return render_template('register.html', form=form)
 
+#Dashboard page
+@app.route("/dashboard")
+@is_logged_in
+def dashboard():
+    return render_template('dashboard.html')
+
 
 @app.route("/")
 def index():
