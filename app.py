@@ -1,6 +1,7 @@
 from flask import Flask, render_template, flash, redirect, url_for, session, request, logging
 from passlib.hash import sha256_crypt
 from flask_mysqldb import MySQL
+from functools import wraps
 
 from sqlhelpers import *
 from forms import *
@@ -13,6 +14,31 @@ app.config['MYSQL_DB'] = 'crypto'
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 
 mysql = MySQL(app)
+
+# wrap to define if the user is currently logged in from session
+
+
+def is_logged_in(f):
+    @wraps(f)
+    def wrap(*args, **kwargs):
+        if 'logged_in' in session:
+            return f(*args, **kwargs)
+        else:
+            flash("Unauthorized, please login.", "danger")
+            return redirect(url_for('login'))
+    return wrap
+
+# log in the user by updating session
+
+
+def log_in_user(username):
+    users = Table("users", "name", "email", "username", "password")
+    user = users.getone("username", username)
+
+    session['logged_in'] = True
+    session['username'] = username
+    session['name'] = user.get('name')
+    session['email'] = user.get('email')
 
 
 @app.route("/register", methods=['GET', 'POST'])
@@ -97,6 +123,7 @@ def index():
     return render_template('index.html')
 
 
+# Run app
 if __name__ == '__main__':
+    app.secret_key = 'secret123'
     app.run(debug=True)
-    app.secret_key = 'secrret123'
