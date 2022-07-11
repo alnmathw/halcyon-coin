@@ -1,7 +1,7 @@
 # Halcyon Coin 
 Halcyon Coin is a cryptocurrency transacted upon a blockchain that was implemented from scratch using Python. 
 
-<img src = "assets/pictures/langingpage.jpg" alt="langing page"/>
+<img src = "assets/pictures/landingpage.jpg" alt="langing page"/>
 
 I used Python for the backend, which is connected to an SQL database, and Flask to create a frontend interface in which users can create an account, purchase Halcyon Coin, sell Halcyon Coin, and see Halcyon Coin transactions on the dashboard. 
 
